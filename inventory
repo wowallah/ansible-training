@@ -1,4 +1,9 @@
-ec2-18-233-98-13.compute-1.amazonaws.com ansible_user=ubuntu apache_package=apache2 php_package=libapache2-mod-php
-ec2-35-172-114-182.compute-1.amazonaws.com ansible_user=ubuntu apache_package=apache2 php_package=libapache2-mod-php
-ec2-52-91-103-54.compute-1.amazonaws.com ansible_user=ubuntu apache_package=apache2 php_package=libapache2-mod-php
-ec2-3-87-72-255.compute-1.amazonaws.com ansible_user=ec2-user apache_package=httpd php_package=php
+[web_servers]
+ec2-18-233-98-13.compute-1.amazonaws.com ansible_user=ubuntu
+ec2-35-172-114-182.compute-1.amazonaws.com ansible_user=ubuntu
+
+[db_servers]
+ec2-52-91-103-54.compute-1.amazonaws.com ansible_user=ubuntu
+
+[file_servers]
+ec2-3-87-72-255.compute-1.amazonaws.com ansible_user=ec2-user
