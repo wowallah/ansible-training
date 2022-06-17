@@ -7,3 +7,6 @@ ec2-52-91-103-54.compute-1.amazonaws.com ansible_user=ubuntu
 
 [file_servers]
 ec2-3-87-72-255.compute-1.amazonaws.com ansible_user=ec2-user
+
+[workstations]
+ec2-3-83-156-8.compute-1.amazonaws.com ansible_user=ubuntu
