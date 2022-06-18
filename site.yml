@@ -4,20 +4,31 @@
   become: true
   pre_tasks:
 
-  - name: install updates (Amazon Linux - CentOS)
+  - name: update repo cache (Amazon Linux - CentOS)
     tags: always
     yum:
-      update_only: yes
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Amazon"
 
-  - name: install updates (Ubuntu)
+  - name: update repo cache (Ubuntu)
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Ubuntu"
 
+- hosts: all
+  become: true
+  tasks:
+
+  - name: add ssh key for simone
+    tags: always
+    authorized_key:
+      user: simone
+      state: present
+      key: "{{ lookup('file','~/.ssh/id_ed25519_simone_ansible.pub') }}"
+      
 - hosts: workstations
   become: true
   tasks:
@@ -35,7 +46,6 @@
       owner: root
       group: root
       
-
 - hosts: web_servers
   become: true
   tasks:
@@ -57,6 +67,29 @@
       state: latest
     when: ansible_distribution == "Amazon"
 
+  - name: start httpd (Amazon Linux - CentOS)
+    tags: apache, centos, httpd
+    service:
+      name: httpd
+      state: started
+    when: ansible_distribution == "Amazon"
+
+  - name: change email address for apache server admin
+    tags: apache, centos, httpd
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin root@localhost
+    when: ansible_distribution == "Amazon"
+    register: variable_whose_name_does_not_matter
+
+  - name: restart httpd (Amazon Linux - CentOS)
+    tags: apache, centos, httpd
+    service:
+      name: httpd
+      state: restarted
+    when: variable_whose_name_does_not_matter.changed
+
   - name: copy default html file for site
     tags: apache, apache2, htppd
     copy:
@@ -66,7 +99,6 @@
       group: root
       mode: 0644
       
-
 - hosts: db_servers
   become: true
   tasks:
